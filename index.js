@@ -8,6 +8,8 @@ const createSrpcMiddleware = url => ({ dispatch, getState }) => (next) => (actio
       .then(response => response.json())
       .then(payload => {
         next({ type: `${action.payload.functionName}Result`, payload })
+
+        return payload
       })
       .catch(console.error)
   }
