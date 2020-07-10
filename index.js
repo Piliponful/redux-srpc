@@ -1,5 +1,17 @@
+const srpcCallActionType = 'SRPC_CALL'
+
+const dispatchSrpcCall = dispatch => (method, params) => {
+  return dispatch({
+    type: actionType,
+    payload: {
+      method,
+      params
+    }
+  })
+}
+
 const createSrpcMiddleware = url => ({ dispatch, getState }) => (next) => (action) => {
-  if (action.type === 'SRPC_CALL') {
+  if (action.type === actionType) {
     return window.fetch(url, {
       method: 'post',
       body: JSON.stringify(action.payload),
@@ -7,7 +19,7 @@ const createSrpcMiddleware = url => ({ dispatch, getState }) => (next) => (actio
     })
       .then(response => response.json())
       .then(payload => {
-        next({ type: `${action.payload.functionName}Result`, payload })
+        next({ type: `${action.payload.method}Result`, payload })
 
         return payload
       })
@@ -17,4 +29,4 @@ const createSrpcMiddleware = url => ({ dispatch, getState }) => (next) => (actio
   return next(action)
 }
 
-export default createSrpcMiddleware
+export default { createSrpcMiddleware, srpcCallActionType, dispatchSrpcCall }
