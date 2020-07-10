@@ -17,13 +17,23 @@ export const createSrpcMiddleware = url => ({ dispatch, getState }) => (next) =>
       body: JSON.stringify(action.payload),
       headers: { 'Content-Type': 'application/json' }
     })
-      .then(response => response.json())
+      .then(response => {
+        const result = response.json()
+
+        if (result.error) {
+          throw new Error(result.error)
+        }
+
+        return result
+      })
       .then(payload => {
         next({ type: `${action.payload.method}Result`, payload })
 
         return payload
       })
-      .catch(console.error)
+      .catch(payload => {
+        next({ type: `${action.payload.method}Error`, payload })
+      })
   }
 
   return next(action)
