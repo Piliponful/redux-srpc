@@ -2,7 +2,7 @@ export const srpcCallActionType = 'SRPC_CALL'
 
 export const dispatchSrpcCall = dispatch => (method, params) => {
   return dispatch({
-    type: actionType,
+    type: srpcCallActionType,
     payload: {
       method,
       params
@@ -11,7 +11,7 @@ export const dispatchSrpcCall = dispatch => (method, params) => {
 }
 
 export const createSrpcMiddleware = url => ({ dispatch, getState }) => (next) => (action) => {
-  if (action.type === actionType) {
+  if (action.type === srpcCallActionType) {
     return window.fetch(url, {
       method: 'post',
       body: JSON.stringify(action.payload),
